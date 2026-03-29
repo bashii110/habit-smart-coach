@@ -1,0 +1,29 @@
+﻿Analyzing smart_habit_coach 2.0...                              
+
+   info - The file name 'Custom_button.dart' isn't a lower_case_with_underscores identifier - lib\components\Custom_button.dart:1:1 - file_names
+warning - The value of the local variable 'theme' isn't used - lib\components\Custom_button.dart:27:11 - unused_local_variable
+   info - The file name 'Custom_textfield.dart' isn't a lower_case_with_underscores identifier - lib\components\Custom_textfield.dart:1:1 - file_names
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\home_screen.dart:423:28 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\home_screen.dart:437:28 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\home_screen.dart:481:11 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\screens\home_screen.dart:483:26 - use_build_context_synchronously
+
+flutter : 7 issues 
+found. (ran in 4.0s)
+At line:1 char:1
++ flutter analyze 
+--no-fatal-infos 
+--no-fatal-warnings 2>&1 
+| Out-File  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (7 issues found. (ra   
+ n in 4.0s):String) [    
+], RemoteException
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 

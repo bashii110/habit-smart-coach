@@ -1,0 +1,48 @@
+name: smart_habit_coach
+description: A smart habit tracking app with AI-powered insights and analytics.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
+
+  # State Management
+  provider: ^6.1.1
+
+  # Notifications
+  flutter_local_notifications: ^19.5.0
+  timezone: ^0.10.1
+
+  # Charts
+  fl_chart: ^0.66.2
+
+  # Storage
+  shared_preferences: ^2.2.2
+
+  # Utils
+  intl: ^0.18.1
+  uuid: ^4.2.1
+
+  # UI
+  cupertino_icons: ^1.0.6
+  google_fonts: ^6.1.0
+  lottie: ^2.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/animations/
