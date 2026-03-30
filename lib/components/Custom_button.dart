@@ -1,6 +1,7 @@
-// lib/widgets/custom_button.dart
+// lib/components/custom_button.dart
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
   final String label;
@@ -24,9 +25,19 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // OUTLINED BUTTON
+    if (isOutlined) {
+      return SizedBox(
+        width: width ?? double.infinity,
+        child: OutlinedButton(
+          onPressed: isLoading ? null : onPressed,
+          child: Text(label),
+        ),
+      );
+    }
 
-    Widget child = isLoading
+    // GRADIENT BUTTON
+    final Widget child = isLoading
         ? const SizedBox(
       height: 18,
       width: 18,
@@ -43,22 +54,17 @@ class CustomButton extends StatelessWidget {
           Icon(icon, size: 18, color: Colors.white),
           const SizedBox(width: 8),
         ],
-        Text(label),
+        Text(
+          label,
+          style: GoogleFonts.sora(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
       ],
     );
 
-    // OUTLINED BUTTON
-    if (isOutlined) {
-      return SizedBox(
-        width: width ?? double.infinity,
-        child: OutlinedButton(
-          onPressed: isLoading ? null : onPressed,
-          child: Text(label),
-        ),
-      );
-    }
-
-    // GRADIENT BUTTON
     return SizedBox(
       width: width ?? double.infinity,
       child: InkWell(

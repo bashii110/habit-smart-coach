@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:smart_habit_coach/models/user_model.dart';
-
 import '../firebase auth/auth_service.dart';
 
 enum AuthStatus { initial, loading, authenticated, unauthenticated, error }
@@ -29,7 +28,17 @@ class AuthProvider extends ChangeNotifier {
   void _init() {
     _authService.authStateChanges.listen((User? firebaseUser) async {
       if (firebaseUser != null) {
-        _user = await _authService.getCurrentUserModel();
+        // ✅ Load user model fully before notifying listeners
+        // so that auth.user is never null when screens read it
+        final model = await _authService.getCurrentUserModel();
+        _user = model ??
+            UserModel(
+              uid: firebaseUser.uid,
+              email: firebaseUser.email ?? '',
+              displayName: firebaseUser.displayName,
+              createdAt: DateTime.now(),
+              lastLogin: DateTime.now(),
+            );
         _status = AuthStatus.authenticated;
       } else {
         _user = null;
@@ -108,7 +117,8 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void _setError(String message) {
-    _status = _user != null ? AuthStatus.authenticated : AuthStatus.unauthenticated;
+    _status =
+    _user != null ? AuthStatus.authenticated : AuthStatus.unauthenticated;
     _errorMessage = message;
     notifyListeners();
   }

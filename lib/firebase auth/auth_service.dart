@@ -1,7 +1,8 @@
-// lib/services/auth_service.dart
+// lib/firebase auth/auth_service.dart
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:smart_habit_coach/models/user_model.dart';
 
 class AuthService {
@@ -18,33 +19,43 @@ class AuthService {
     String? displayName,
   }) async {
     try {
-      final cred = await _auth.createUserWithEmailAndPassword(
+      // ✅ Discard credential — never access .user on it (PigeonUserDetails bug)
+      await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      if (cred.user == null) return null;
 
-      // Update display name
+      final user = _auth.currentUser;
+      if (user == null) throw 'Registration failed. Please try again.';
+
       if (displayName != null && displayName.isNotEmpty) {
-        await cred.user!.updateDisplayName(displayName);
+        await user.updateDisplayName(displayName);
+        await user.reload();
       }
 
-      // Create Firestore user document
       final userModel = UserModel(
-        uid: cred.user!.uid,
+        uid: user.uid,
         email: email,
         displayName: displayName,
         createdAt: DateTime.now(),
         lastLogin: DateTime.now(),
       );
-      await _firestore
-          .collection('users')
-          .doc(cred.user!.uid)
-          .set(userModel.toFirestore());
+
+      // ✅ Wrapped — rules may not propagate instantly right after signup
+      try {
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .set(userModel.toFirestore());
+      } catch (e) {
+        debugPrint('Firestore user doc create error (non-fatal): $e');
+      }
 
       return userModel;
     } on FirebaseAuthException catch (e) {
       throw _mapAuthError(e.code);
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -53,29 +64,48 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final cred = await _auth.signInWithEmailAndPassword(
+      // ✅ Discard credential — never access .user on it (PigeonUserDetails bug)
+      await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      if (cred.user == null) return null;
 
-      // Update last login
-      await _firestore.collection('users').doc(cred.user!.uid).update({
-        'lastLogin': Timestamp.fromDate(DateTime.now()),
-      });
+      final user = _auth.currentUser;
+      if (user == null) throw 'Sign in failed. Please try again.';
 
-      final doc =
-      await _firestore.collection('users').doc(cred.user!.uid).get();
-      if (doc.exists) return UserModel.fromFirestore(doc);
+      // ✅ lastLogin update is best-effort — permission-denied must NEVER
+      // crash the login flow. Fully wrapped in try/catch.
+      try {
+        await _firestore.collection('users').doc(user.uid).set(
+          {'lastLogin': Timestamp.fromDate(DateTime.now())},
+          SetOptions(merge: true),
+        );
+      } catch (e) {
+        debugPrint('lastLogin update error (non-fatal): $e');
+      }
 
+      // ✅ Firestore user doc read is also best-effort
+      try {
+        final doc =
+        await _firestore.collection('users').doc(user.uid).get();
+        if (doc.exists) return UserModel.fromFirestore(doc);
+      } catch (e) {
+        debugPrint('Firestore user doc read error (non-fatal): $e');
+      }
+
+      // Always return a valid model from Firebase Auth data
+      // even if Firestore is unreachable or rules block it
       return UserModel(
-        uid: cred.user!.uid,
-        email: email,
+        uid: user.uid,
+        email: user.email ?? email,
+        displayName: user.displayName,
         createdAt: DateTime.now(),
         lastLogin: DateTime.now(),
       );
     } on FirebaseAuthException catch (e) {
       throw _mapAuthError(e.code);
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -94,11 +124,23 @@ class AuthService {
   Future<UserModel?> getCurrentUserModel() async {
     final user = _auth.currentUser;
     if (user == null) return null;
+
     try {
-      final doc = await _firestore.collection('users').doc(user.uid).get();
+      final doc =
+      await _firestore.collection('users').doc(user.uid).get();
       if (doc.exists) return UserModel.fromFirestore(doc);
-    } catch (_) {}
-    return null;
+    } catch (e) {
+      debugPrint('getCurrentUserModel Firestore error (non-fatal): $e');
+    }
+
+    // Always return something — never leave the app stuck on splash
+    return UserModel(
+      uid: user.uid,
+      email: user.email ?? '',
+      displayName: user.displayName,
+      createdAt: DateTime.now(),
+      lastLogin: DateTime.now(),
+    );
   }
 
   String _mapAuthError(String code) {
@@ -107,6 +149,8 @@ class AuthService {
         return 'No account found with this email.';
       case 'wrong-password':
         return 'Incorrect password. Please try again.';
+      case 'invalid-credential':
+        return 'Incorrect email or password. Please try again.';
       case 'email-already-in-use':
         return 'An account already exists with this email.';
       case 'invalid-email':

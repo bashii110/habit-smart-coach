@@ -57,9 +57,7 @@ class _HomeScreenState extends State<HomeScreen>
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('Sign out?'),
-        content: const Text(
-          'Are you sure you want to sign out?',
-        ),
+        content: const Text('Are you sure you want to sign out?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -78,8 +76,13 @@ class _HomeScreenState extends State<HomeScreen>
 
     if (confirm != true || !mounted) return;
 
-    context.read<HabitProvider>().clearHabits();
-    await context.read<AuthProvider>().logout();
+    // ✅ Capture providers BEFORE any await
+    final habitProv = context.read<HabitProvider>();
+    final authProv = context.read<AuthProvider>();
+
+    habitProv.clearHabits();
+    await authProv.logout();
+
     if (!mounted) return;
     Navigator.pushReplacement(
       context,
@@ -90,9 +93,7 @@ class _HomeScreenState extends State<HomeScreen>
   void _navigateToAddHabit() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const AddEditHabitScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const AddEditHabitScreen()),
     );
   }
 
@@ -108,9 +109,7 @@ class _HomeScreenState extends State<HomeScreen>
             _buildHeader(context, isDark),
             _buildProgressBanner(context),
             _buildTabBar(context, isDark),
-            Expanded(
-              child: _buildBody(context),
-            ),
+            Expanded(child: _buildBody(context)),
           ],
         ),
       ),
@@ -142,14 +141,13 @@ class _HomeScreenState extends State<HomeScreen>
                     Text(
                       user?.firstName ?? 'there 👋',
                       style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.w800,
-                              ),
+                      Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ],
                 ),
               ),
-              // Theme toggle
               Consumer<ThemeProvider>(
                 builder: (context, theme, _) => IconButton(
                   icon: Icon(
@@ -216,8 +214,8 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.white.withAlpha(50),
                       borderRadius: BorderRadius.circular(20),
@@ -240,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen>
                   value: rate,
                   backgroundColor: Colors.white.withAlpha(64),
                   valueColor:
-                      const AlwaysStoppedAnimation<Color>(Colors.white),
+                  const AlwaysStoppedAnimation<Color>(Colors.white),
                   minHeight: 8,
                 ),
               ),
@@ -249,10 +247,10 @@ class _HomeScreenState extends State<HomeScreen>
                 rate == 1.0
                     ? '🎉 All habits done! Amazing work!'
                     : rate > 0.5
-                        ? '💪 More than halfway there!'
-                        : total == 0
-                            ? 'Add your first habit to get started'
-                            : '🚀 Let\'s crush those habits!',
+                    ? '💪 More than halfway there!'
+                    : total == 0
+                    ? 'Add your first habit to get started'
+                    : '🚀 Let\'s crush those habits!',
                 style: GoogleFonts.inter(
                   color: Colors.white.withAlpha(217),
                   fontSize: 12,
@@ -279,7 +277,8 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Widget _buildTab(BuildContext context, int index, String label, bool isDark) {
+  Widget _buildTab(
+      BuildContext context, int index, String label, bool isDark) {
     final isSelected = _selectedIndex == index;
     return GestureDetector(
       onTap: () => setState(() => _selectedIndex = index),
@@ -290,8 +289,8 @@ class _HomeScreenState extends State<HomeScreen>
           color: isSelected
               ? AppTheme.primaryColor
               : (isDark
-                  ? AppTheme.darkCardBg
-                  : AppTheme.primaryColor.withAlpha(20)),
+              ? AppTheme.darkCardBg
+              : AppTheme.primaryColor.withAlpha(20)),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
@@ -302,8 +301,8 @@ class _HomeScreenState extends State<HomeScreen>
             color: isSelected
                 ? Colors.white
                 : (isDark
-                    ? AppTheme.darkTextSecondary
-                    : AppTheme.lightTextSecondary),
+                ? AppTheme.darkTextSecondary
+                : AppTheme.lightTextSecondary),
           ),
         ),
       ),
@@ -332,9 +331,9 @@ class _HomeScreenState extends State<HomeScreen>
                 : 'You\'ve completed all habits for today',
             action: _selectedIndex == 0
                 ? TextButton(
-                    onPressed: _navigateToAddHabit,
-                    child: const Text('Add first habit'),
-                  )
+              onPressed: _navigateToAddHabit,
+              child: const Text('Add first habit'),
+            )
                 : null,
           );
         }
@@ -348,9 +347,9 @@ class _HomeScreenState extends State<HomeScreen>
               padding: const EdgeInsets.only(bottom: 12),
               child: HabitCard(
                 habit: habit,
-                onToggle: () => _toggleHabit(context, habit),
+                onToggle: () => _toggleHabit(habit),
                 onEdit: () => _editHabit(habit),
-                onDelete: () => _deleteHabit(context, habit),
+                onDelete: () => _deleteHabit(habit),
               ),
             );
           },
@@ -415,12 +414,15 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Future<void> _toggleHabit(BuildContext context, HabitModel habit) async {
+  // ✅ Fixed: provider captured before await
+  Future<void> _toggleHabit(HabitModel habit) async {
+    final habitProv = context.read<HabitProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+
     try {
-      final completed =
-          await context.read<HabitProvider>().toggleHabitCompletion(habit);
+      final completed = await habitProv.toggleHabitCompletion(habit);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(
           content: Text(
             completed
@@ -428,13 +430,13 @@ class _HomeScreenState extends State<HomeScreen>
                 : '${habit.title} unmarked',
           ),
           backgroundColor:
-              completed ? AppTheme.successColor : AppTheme.warningColor,
+          completed ? AppTheme.successColor : AppTheme.warningColor,
           duration: const Duration(seconds: 2),
         ),
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),
           backgroundColor: AppTheme.errorColor,
@@ -446,17 +448,17 @@ class _HomeScreenState extends State<HomeScreen>
   void _editHabit(HabitModel habit) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => AddEditHabitScreen(habit: habit),
-      ),
+      MaterialPageRoute(builder: (_) => AddEditHabitScreen(habit: habit)),
     );
   }
 
-  Future<void> _deleteHabit(BuildContext context, HabitModel habit) async {
+  // ✅ Fixed: provider and messenger captured before await
+  Future<void> _deleteHabit(HabitModel habit) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('Delete habit?'),
         content: Text(
           'Are you sure you want to delete "${habit.title}"? This cannot be undone.',
@@ -478,9 +480,15 @@ class _HomeScreenState extends State<HomeScreen>
     );
 
     if (confirm != true || !mounted) return;
-    await context.read<HabitProvider>().deleteHabit(habit.id);
+
+    // ✅ Capture before await
+    final habitProv = context.read<HabitProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+
+    await habitProv.deleteHabit(habit.id);
+
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
+    messenger.showSnackBar(
       const SnackBar(
         content: Text('Habit deleted'),
         backgroundColor: AppTheme.errorColor,
@@ -516,8 +524,8 @@ class _BottomNavItem extends StatelessWidget {
             color: isActive
                 ? AppTheme.primaryColor
                 : (isDark
-                    ? AppTheme.darkTextSecondary
-                    : AppTheme.lightTextSecondary),
+                ? AppTheme.darkTextSecondary
+                : AppTheme.lightTextSecondary),
             size: 26,
           ),
           const SizedBox(height: 4),
@@ -529,8 +537,8 @@ class _BottomNavItem extends StatelessWidget {
               color: isActive
                   ? AppTheme.primaryColor
                   : (isDark
-                      ? AppTheme.darkTextSecondary
-                      : AppTheme.lightTextSecondary),
+                  ? AppTheme.darkTextSecondary
+                  : AppTheme.lightTextSecondary),
             ),
           ),
         ],

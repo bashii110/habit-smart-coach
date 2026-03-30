@@ -76,7 +76,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
           }
 
           final habits = analytics['habits'] as List<HabitModel>;
-          final weeklyData = analytics['weeklyData'] as Map<String, int>;
+          final weeklyData =
+          analytics['weeklyData'] as Map<String, int>;
 
           return FadeTransition(
             opacity: _fadeAnim,
@@ -100,10 +101,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
   }
 
   Widget _buildStatsRow(
-    BuildContext context,
-    Map<String, dynamic> analytics,
-    bool isDark,
-  ) {
+      BuildContext context,
+      Map<String, dynamic> analytics,
+      bool isDark,
+      ) {
     final total = analytics['totalHabits'] as int;
     final completions = analytics['totalCompletions'] as int;
     final longestStreak = analytics['longestStreak'] as int;
@@ -151,10 +152,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
   }
 
   Widget _buildWeeklyChart(
-    BuildContext context,
-    Map<String, int> weeklyData,
-    bool isDark,
-  ) {
+      BuildContext context,
+      Map<String, int> weeklyData,
+      bool isDark,
+      ) {
     final days = AppDateUtils.getLast7Days();
     final maxY = weeklyData.values.isEmpty
         ? 5.0
@@ -198,6 +199,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             barTouchData: BarTouchData(
               enabled: true,
               touchTooltipData: BarTouchTooltipData(
+                // ✅ Correct parameter for fl_chart 0.66.2
                 tooltipBgColor: isDark
                     ? AppTheme.darkCardBg
                     : AppTheme.primaryColor.withAlpha(230),
@@ -233,7 +235,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                     return Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Text(
-                        AppDateUtils.formatDayOfWeek(days[value.toInt()]),
+                        AppDateUtils.formatDayOfWeek(
+                            days[value.toInt()]),
                         style: GoogleFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
@@ -266,18 +269,16 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
   }
 
   Widget _buildInsightsSection(
-    BuildContext context,
-    List<HabitModel> habits,
-    bool isDark,
-  ) {
+      BuildContext context,
+      List<HabitModel> habits,
+      bool isDark,
+      ) {
     final insightHabits = habits
         .where((h) => h.smartTimeSuggestion != null)
         .take(3)
         .toList();
 
-    if (insightHabits.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    if (insightHabits.isEmpty) return const SizedBox.shrink();
 
     return _SectionCard(
       title: '💡 Smart Insights',
@@ -313,7 +314,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                       ),
                       Text(
                         habit.smartTimeSuggestion!,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        style:
+                        Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppTheme.primaryColor,
                         ),
                       ),
@@ -329,10 +331,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
   }
 
   Widget _buildHabitBreakdown(
-    BuildContext context,
-    List<HabitModel> habits,
-    bool isDark,
-  ) {
+      BuildContext context,
+      List<HabitModel> habits,
+      bool isDark,
+      ) {
     if (habits.isEmpty) return const SizedBox.shrink();
 
     return _SectionCard(
@@ -357,9 +359,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                       child: Text(
                         habit.title,
                         style:
-                            Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                ),
+                        Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     Text(
@@ -370,8 +372,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                         color: rate >= 0.8
                             ? AppTheme.successColor
                             : rate >= 0.5
-                                ? AppTheme.warningColor
-                                : AppTheme.errorColor,
+                            ? AppTheme.warningColor
+                            : AppTheme.errorColor,
                       ),
                     ),
                   ],
@@ -388,8 +390,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                       rate >= 0.8
                           ? AppTheme.successColor
                           : rate >= 0.5
-                              ? AppTheme.warningColor
-                              : AppTheme.errorColor,
+                          ? AppTheme.warningColor
+                          : AppTheme.errorColor,
                     ),
                     minHeight: 6,
                   ),

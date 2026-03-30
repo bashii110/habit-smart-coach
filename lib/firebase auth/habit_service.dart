@@ -1,4 +1,4 @@
-// lib/services/habit_service.dart
+// lib/firebase auth/habit_service.dart
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smart_habit_coach/models/habit_model.dart';
@@ -16,8 +16,9 @@ class HabitService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map(
-          (snapshot) =>
-          snapshot.docs.map((doc) => HabitModel.fromFirestore(doc)).toList(),
+          (snapshot) => snapshot.docs
+          .map((doc) => HabitModel.fromFirestore(doc))
+          .toList(),
     );
   }
 
@@ -26,7 +27,9 @@ class HabitService {
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .get();
-    return snapshot.docs.map((doc) => HabitModel.fromFirestore(doc)).toList();
+    return snapshot.docs
+        .map((doc) => HabitModel.fromFirestore(doc))
+        .toList();
   }
 
   Future<String> addHabit(HabitModel habit) async {
@@ -51,7 +54,7 @@ class HabitService {
     final now = DateTime.now();
     final today = AppDateUtils.startOfDay(now);
 
-    // Already completed today
+    // Already completed today — no-op, return null
     if (habit.completedDates.any((d) => AppDateUtils.isSameDay(d, today))) {
       return null;
     }
@@ -59,7 +62,12 @@ class HabitService {
     final updatedDates = [...habit.completedDates, now];
     final newStreak = AppDateUtils.calculateStreak(updatedDates);
     final currentHour = now.hour.toString();
-    final updatedHours = [...habit.completionHours, currentHour];
+
+    // ✅ Cap completionHours at last 30 entries to prevent unbounded growth
+    final rawHours = [...habit.completionHours, currentHour];
+    final updatedHours = rawHours.length > 30
+        ? rawHours.sublist(rawHours.length - 30)
+        : rawHours;
 
     final updated = habit.copyWith(
       completedDates: updatedDates,
@@ -69,7 +77,8 @@ class HabitService {
     );
 
     await _habits.doc(habit.id).update({
-      'completedDates': updatedDates.map((d) => Timestamp.fromDate(d)).toList(),
+      'completedDates':
+      updatedDates.map((d) => Timestamp.fromDate(d)).toList(),
       'streakCount': newStreak,
       'updatedAt': FieldValue.serverTimestamp(),
       'completionHours': updatedHours,
@@ -118,12 +127,12 @@ class HabitService {
     habits.where((h) => h.frequency == 'daily').toList();
     final last7Days = AppDateUtils.getLast7Days();
 
-    // Calculate weekly completion
     final weeklyData = <String, int>{};
     for (final day in last7Days) {
       int completedCount = 0;
       for (final habit in dailyHabits) {
-        if (habit.completedDates.any((d) => AppDateUtils.isSameDay(d, day))) {
+        if (habit.completedDates
+            .any((d) => AppDateUtils.isSameDay(d, day))) {
           completedCount++;
         }
       }
@@ -132,9 +141,10 @@ class HabitService {
 
     double completionRate = 0;
     if (dailyHabits.isNotEmpty) {
-      int totalPossible = dailyHabits.length * 7;
-      int actualCompleted = weeklyData.values.fold(0, (a, b) => a + b);
-      completionRate = totalPossible > 0 ? actualCompleted / totalPossible : 0;
+      final totalPossible = dailyHabits.length * 7;
+      final actualCompleted = weeklyData.values.fold(0, (a, b) => a + b);
+      completionRate =
+      totalPossible > 0 ? actualCompleted / totalPossible : 0;
     }
 
     return {

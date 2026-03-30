@@ -59,14 +59,17 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkAuth() async {
+    // Let the splash animation play for at least 2 seconds
     await Future.delayed(const Duration(milliseconds: 2000));
     if (!mounted) return;
 
     final authProvider = context.read<AuthProvider>();
 
-    // Wait for auth state to be determined
-    while (authProvider.status == AuthStatus.initial) {
+    // ✅ Wait for auth state with a timeout (max 5 seconds = 50 × 100ms)
+    int attempts = 0;
+    while (authProvider.status == AuthStatus.initial && attempts < 50) {
       await Future.delayed(const Duration(milliseconds: 100));
+      attempts++;
       if (!mounted) return;
     }
 

@@ -103,10 +103,25 @@ class _AddEditHabitScreenState extends State<AddEditHabitScreen>
 
     setState(() => _isLoading = true);
 
-    try {
-      final auth = context.read<AuthProvider>();
-      final habitProv = context.read<HabitProvider>();
+    // ✅ FIX: Capture providers and validate user BEFORE any await
+    final auth = context.read<AuthProvider>();
+    final habitProv = context.read<HabitProvider>();
+    final messenger = ScaffoldMessenger.of(context);
 
+    // ✅ FIX: Guard against null user — this was causing the null check crash
+    final userId = auth.user?.uid;
+    if (userId == null) {
+      setState(() => _isLoading = false);
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Session expired. Please log in again.'),
+          backgroundColor: AppTheme.errorColor,
+        ),
+      );
+      return;
+    }
+
+    try {
       final timeStr = _preferredTime != null
           ? '${_preferredTime!.hour.toString().padLeft(2, '0')}:${_preferredTime!.minute.toString().padLeft(2, '0')}'
           : null;
@@ -125,7 +140,7 @@ class _AddEditHabitScreenState extends State<AddEditHabitScreen>
         const uuid = Uuid();
         final newHabit = HabitModel(
           id: uuid.v4(),
-          userId: auth.user!.uid,
+          userId: userId, // ✅ use the safely captured userId
           title: _titleController.text.trim(),
           description: _descController.text.trim(),
           frequency: _frequency,
@@ -138,17 +153,15 @@ class _AddEditHabitScreenState extends State<AddEditHabitScreen>
 
       if (!mounted) return;
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(
-          content: Text(
-            isEditing ? 'Habit updated! ✅' : 'Habit added! 🎉',
-          ),
+          content: Text(isEditing ? 'Habit updated! ✅' : 'Habit added! 🎉'),
           backgroundColor: AppTheme.successColor,
         ),
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),
           backgroundColor: AppTheme.errorColor,
@@ -181,7 +194,6 @@ class _AddEditHabitScreenState extends State<AddEditHabitScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Emoji picker
                 _buildSectionLabel(context, 'Icon'),
                 const SizedBox(height: 12),
                 _buildEmojiPicker(isDark),
@@ -281,8 +293,8 @@ class _AddEditHabitScreenState extends State<AddEditHabitScreen>
                 color: isSelected
                     ? AppTheme.primaryColor
                     : (isDark
-                        ? AppTheme.darkSurface
-                        : AppTheme.lightTextSecondary.withAlpha(50)),
+                    ? AppTheme.darkSurface
+                    : AppTheme.lightTextSecondary.withAlpha(50)),
                 width: isSelected ? 1.5 : 1,
               ),
             ),
@@ -323,7 +335,8 @@ class _AddEditHabitScreenState extends State<AddEditHabitScreen>
     return GestureDetector(
       onTap: _pickTime,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding:
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: isDark ? AppTheme.darkSurface : AppTheme.lightSurface,
           borderRadius: BorderRadius.circular(12),
@@ -331,8 +344,8 @@ class _AddEditHabitScreenState extends State<AddEditHabitScreen>
             color: _preferredTime != null
                 ? AppTheme.primaryColor
                 : (isDark
-                    ? AppTheme.primaryLight.withAlpha(50)
-                    : AppTheme.primaryColor.withAlpha(38)),
+                ? AppTheme.primaryLight.withAlpha(50)
+                : AppTheme.primaryColor.withAlpha(38)),
             width: _preferredTime != null ? 1.5 : 1,
           ),
         ),
@@ -343,8 +356,8 @@ class _AddEditHabitScreenState extends State<AddEditHabitScreen>
               color: _preferredTime != null
                   ? AppTheme.primaryColor
                   : (isDark
-                      ? AppTheme.darkTextSecondary
-                      : AppTheme.lightTextSecondary),
+                  ? AppTheme.darkTextSecondary
+                  : AppTheme.lightTextSecondary),
               size: 20,
             ),
             const SizedBox(width: 12),
@@ -357,11 +370,11 @@ class _AddEditHabitScreenState extends State<AddEditHabitScreen>
                   fontSize: 14,
                   color: _preferredTime != null
                       ? (isDark
-                          ? AppTheme.darkTextPrimary
-                          : AppTheme.lightTextPrimary)
+                      ? AppTheme.darkTextPrimary
+                      : AppTheme.lightTextPrimary)
                       : (isDark
-                          ? AppTheme.darkTextSecondary
-                          : AppTheme.lightTextSecondary),
+                      ? AppTheme.darkTextSecondary
+                      : AppTheme.lightTextSecondary),
                 ),
               ),
             ),
@@ -411,8 +424,8 @@ class _FrequencyOption extends StatelessWidget {
             color: isSelected
                 ? AppTheme.primaryColor
                 : (isDark
-                    ? AppTheme.primaryLight.withAlpha(25)
-                    : AppTheme.primaryColor.withAlpha(20)),
+                ? AppTheme.primaryLight.withAlpha(25)
+                : AppTheme.primaryColor.withAlpha(20)),
             width: isSelected ? 1.5 : 1,
           ),
         ),
@@ -424,8 +437,8 @@ class _FrequencyOption extends StatelessWidget {
               color: isSelected
                   ? AppTheme.primaryColor
                   : (isDark
-                      ? AppTheme.darkTextSecondary
-                      : AppTheme.lightTextSecondary),
+                  ? AppTheme.darkTextSecondary
+                  : AppTheme.lightTextSecondary),
               size: 24,
             ),
             const SizedBox(height: 8),
@@ -434,12 +447,12 @@ class _FrequencyOption extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight:
-                    isSelected ? FontWeight.w600 : FontWeight.w400,
+                isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: isSelected
                     ? AppTheme.primaryColor
                     : (isDark
-                        ? AppTheme.darkTextSecondary
-                        : AppTheme.lightTextSecondary),
+                    ? AppTheme.darkTextSecondary
+                    : AppTheme.lightTextSecondary),
               ),
             ),
           ],

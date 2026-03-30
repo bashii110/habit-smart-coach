@@ -61,7 +61,11 @@ class _RegisterScreenState extends State<RegisterScreen>
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
 
+    // ✅ Capture everything BEFORE the await
     final auth = context.read<AuthProvider>();
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+
     final success = await auth.register(
       _emailController.text.trim(),
       _passwordController.text,
@@ -69,18 +73,22 @@ class _RegisterScreenState extends State<RegisterScreen>
     );
 
     if (!mounted) return;
+
     if (success) {
-      Navigator.pushReplacement(
-        context,
+      // ✅ Use pre-captured navigator
+      navigator.pushReplacement(
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
-    } else if (auth.errorMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(auth.errorMessage!),
-          backgroundColor: AppTheme.errorColor,
-        ),
-      );
+    } else {
+      final error = auth.errorMessage;
+      if (error != null) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(error),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+      }
     }
   }
 
@@ -156,7 +164,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                         if (val == null || val.isEmpty) {
                           return 'Email is required';
                         }
-                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(val)) {
+                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                            .hasMatch(val)) {
                           return 'Enter a valid email address';
                         }
                         return null;

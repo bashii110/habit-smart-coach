@@ -1,0 +1,40 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Users ───────────────────────────────────────────────────────────────
+    match /users/{userId} {
+      allow read, write: if request.auth != null
+                         && request.auth.uid == userId;
+    }
+
+    // ─── Habits ──────────────────────────────────────────────────────────────
+    match /habits/{habitId} {
+
+      allow read: if request.auth != null
+                  && resource.data.userId == request.auth.uid;
+
+      allow create: if request.auth != null
+                    && request.resource.data.userId == request.auth.uid
+                    && validHabit(request.resource.data);
+
+      allow update: if request.auth != null
+                    && resource.data.userId == request.auth.uid
+                    && request.resource.data.userId == request.auth.uid
+                    && validHabit(request.resource.data);
+
+      allow delete: if request.auth != null
+                    && resource.data.userId == request.auth.uid;
+    }
+  }
+}
+
+function validHabit(data) {
+  return data.keys().hasAll(['userId', 'title', 'frequency', 'createdAt'])
+    && data.title is string
+    && data.title.size() >= 2
+    && data.title.size() <= 50
+    && data.frequency in ['daily', 'weekly']
+    && (data.description == null || data.description.size() <= 200);
+}

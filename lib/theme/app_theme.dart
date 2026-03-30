@@ -1,4 +1,4 @@
-// lib/core/theme/app_theme.dart
+// lib/theme/app_theme.dart
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,7 +36,7 @@ class AppTheme {
   static const Color silverColor = Color(0xFFC0C0C0);
   static const Color goldColor = Color(0xFFFFD700);
 
-  // Gradient
+  // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primaryColor, Color(0xFF9C63FF)],
     begin: Alignment.topLeft,
@@ -58,11 +58,12 @@ class AppTheme {
       primary: primaryColor,
       secondary: accentColor,
       error: errorColor,
+      // ✅ Use surface/onSurface instead of deprecated background/onBackground
       surface: lightSurface,
-      surfaceContainerHighest: lightBackground,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
       onSurface: lightTextPrimary,
+      onError: Colors.white,
     ),
     scaffoldBackgroundColor: lightBackground,
     textTheme: _buildTextTheme(lightTextPrimary, lightTextSecondary),
@@ -90,30 +91,31 @@ class AppTheme {
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        textStyle: GoogleFonts.sora(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+        padding:
+        const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)),
+        textStyle:
+        GoogleFonts.sora(fontSize: 15, fontWeight: FontWeight.w600),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: primaryColor,
         side: const BorderSide(color: primaryColor, width: 1.5),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        textStyle: GoogleFonts.sora(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+        padding:
+        const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)),
+        textStyle:
+        GoogleFonts.sora(fontSize: 15, fontWeight: FontWeight.w600),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: lightSurface,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      contentPadding:
+      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: primaryColor.withAlpha(38)),
@@ -130,14 +132,10 @@ class AppTheme {
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: errorColor),
       ),
-      hintStyle: GoogleFonts.inter(
-        color: lightTextSecondary,
-        fontSize: 14,
-      ),
-      labelStyle: GoogleFonts.inter(
-        color: lightTextSecondary,
-        fontSize: 14,
-      ),
+      hintStyle:
+      GoogleFonts.inter(color: lightTextSecondary, fontSize: 14),
+      labelStyle:
+      GoogleFonts.inter(color: lightTextSecondary, fontSize: 14),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: primaryColor,
@@ -147,8 +145,10 @@ class AppTheme {
     chipTheme: ChipThemeData(
       backgroundColor: primaryColor.withAlpha(25),
       selectedColor: primaryColor,
-      labelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      labelStyle:
+      GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
+      shape:
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       side: BorderSide.none,
     ),
     dividerTheme: DividerThemeData(
@@ -172,11 +172,12 @@ class AppTheme {
       primary: primaryLight,
       secondary: accentColor,
       error: errorColor,
+      // ✅ Use surface/onSurface instead of deprecated background/onBackground
       surface: darkSurface,
-      surfaceContainerHighest: darkBackground,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
       onSurface: darkTextPrimary,
+      onError: Colors.white,
     ),
     scaffoldBackgroundColor: darkBackground,
     textTheme: _buildTextTheme(darkTextPrimary, darkTextSecondary),
@@ -204,24 +205,31 @@ class AppTheme {
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        textStyle: GoogleFonts.sora(fontSize: 15, fontWeight: FontWeight.w600),
+        padding:
+        const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)),
+        textStyle:
+        GoogleFonts.sora(fontSize: 15, fontWeight: FontWeight.w600),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: primaryLight,
         side: const BorderSide(color: primaryLight, width: 1.5),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        textStyle: GoogleFonts.sora(fontSize: 15, fontWeight: FontWeight.w600),
+        padding:
+        const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)),
+        textStyle:
+        GoogleFonts.sora(fontSize: 15, fontWeight: FontWeight.w600),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: darkSurface,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      contentPadding:
+      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: primaryLight.withAlpha(50)),
@@ -238,8 +246,10 @@ class AppTheme {
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: errorColor),
       ),
-      hintStyle: GoogleFonts.inter(color: darkTextSecondary, fontSize: 14),
-      labelStyle: GoogleFonts.inter(color: darkTextSecondary, fontSize: 14),
+      hintStyle:
+      GoogleFonts.inter(color: darkTextSecondary, fontSize: 14),
+      labelStyle:
+      GoogleFonts.inter(color: darkTextSecondary, fontSize: 14),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: primaryColor,
@@ -249,8 +259,10 @@ class AppTheme {
     chipTheme: ChipThemeData(
       backgroundColor: primaryLight.withAlpha(38),
       selectedColor: primaryColor,
-      labelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      labelStyle:
+      GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
+      shape:
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       side: BorderSide.none,
     ),
     dividerTheme: DividerThemeData(

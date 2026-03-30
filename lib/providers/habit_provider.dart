@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_habit_coach/models/habit_model.dart';
 
-
 import '../components/app_constants.dart';
 import '../firebase auth/habit_service.dart';
 import '../firebase auth/notification_service.dart';
@@ -87,7 +86,6 @@ class HabitProvider extends ChangeNotifier {
   Future<void> updateHabit(HabitModel habit) async {
     try {
       await _habitService.updateHabit(habit);
-      // Update notification
       await _notificationService.cancelHabitReminder(habit.id);
       if (habit.preferredTime != null) {
         await _notificationService.scheduleHabitReminder(habit);
@@ -108,19 +106,23 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
+  /// Returns true if the habit was just marked complete,
+  /// false if it was unmarked OR was already complete (no-op).
   Future<bool> toggleHabitCompletion(HabitModel habit) async {
     try {
       if (habit.isCompletedToday) {
+        // Unmark completion
         final updated = await _habitService.unmarkComplete(habit);
         if (updated != null) {
           _updateLocalHabit(updated);
         }
         return false;
       } else {
+        // Attempt to mark complete
         final updated = await _habitService.markComplete(habit);
-        if (updated != null) {
-          _updateLocalHabit(updated);
-        }
+        // ✅ markComplete returns null if already completed in Firestore
+        if (updated == null) return false;
+        _updateLocalHabit(updated);
         return true;
       }
     } catch (e) {

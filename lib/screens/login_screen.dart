@@ -58,7 +58,11 @@ class _LoginScreenState extends State<LoginScreen>
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
+    // ✅ Capture everything needed BEFORE the await
     final auth = context.read<AuthProvider>();
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+
     final success = await auth.login(
       _emailController.text.trim(),
       _passwordController.text,
@@ -67,17 +71,20 @@ class _LoginScreenState extends State<LoginScreen>
     if (!mounted) return;
 
     if (success) {
-      Navigator.pushReplacement(
-        context,
+      // ✅ Use pre-captured navigator — avoids context-across-async-gap issue
+      navigator.pushReplacement(
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
-    } else if (auth.errorMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(auth.errorMessage!),
-          backgroundColor: AppTheme.errorColor,
-        ),
-      );
+    } else {
+      final error = auth.errorMessage;
+      if (error != null) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(error),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+      }
     }
   }
 
@@ -195,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen>
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () => _showForgotPassword(),
+                        onPressed: _showForgotPassword,
                         style: TextButton.styleFrom(
                           foregroundColor: AppTheme.primaryColor,
                           padding: EdgeInsets.zero,
@@ -225,19 +232,19 @@ class _LoginScreenState extends State<LoginScreen>
 
                     const SizedBox(height: 24),
 
-                    // Divider
                     Row(
                       children: [
                         Expanded(
                           child: Divider(
                             color: (isDark
-                                    ? AppTheme.darkTextSecondary
-                                    : AppTheme.lightTextSecondary)
+                                ? AppTheme.darkTextSecondary
+                                : AppTheme.lightTextSecondary)
                                 .withAlpha(77),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding:
+                          const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             'or',
                             style: TextStyle(
@@ -251,8 +258,8 @@ class _LoginScreenState extends State<LoginScreen>
                         Expanded(
                           child: Divider(
                             color: (isDark
-                                    ? AppTheme.darkTextSecondary
-                                    : AppTheme.lightTextSecondary)
+                                ? AppTheme.darkTextSecondary
+                                : AppTheme.lightTextSecondary)
                                 .withAlpha(77),
                           ),
                         ),
@@ -316,7 +323,8 @@ class _LoginScreenState extends State<LoginScreen>
         ),
         decoration: BoxDecoration(
           color: Theme.of(ctx).scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius:
+          const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -345,20 +353,27 @@ class _LoginScreenState extends State<LoginScreen>
               CustomButton(
                 label: 'Send Reset Link',
                 onPressed: () async {
-                  Navigator.pop(ctx);
+                  // ✅ Capture before await
                   final auth = context.read<AuthProvider>();
-                  final success =
-                      await auth.resetPassword(emailController.text.trim());
+                  final messenger = ScaffoldMessenger.of(context);
+                  final nav = Navigator.of(ctx);
+
+                  nav.pop();
+
+                  final success = await auth
+                      .resetPassword(emailController.text.trim());
+
                   if (!mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  messenger.showSnackBar(
                     SnackBar(
                       content: Text(
                         success
                             ? 'Password reset email sent!'
                             : auth.errorMessage ?? 'Failed to send email.',
                       ),
-                      backgroundColor:
-                          success ? AppTheme.successColor : AppTheme.errorColor,
+                      backgroundColor: success
+                          ? AppTheme.successColor
+                          : AppTheme.errorColor,
                     ),
                   );
                 },
