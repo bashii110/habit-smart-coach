@@ -58,7 +58,7 @@ class AppTheme {
       primary: primaryColor,
       secondary: accentColor,
       error: errorColor,
-      // ✅ Use surface/onSurface instead of deprecated background/onBackground
+      // ✅ surface/onSurface (no deprecated background/onBackground)
       surface: lightSurface,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
@@ -91,10 +91,9 @@ class AppTheme {
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        padding:
-        const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         textStyle:
         GoogleFonts.sora(fontSize: 15, fontWeight: FontWeight.w600),
       ),
@@ -103,10 +102,9 @@ class AppTheme {
       style: OutlinedButton.styleFrom(
         foregroundColor: primaryColor,
         side: const BorderSide(color: primaryColor, width: 1.5),
-        padding:
-        const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         textStyle:
         GoogleFonts.sora(fontSize: 15, fontWeight: FontWeight.w600),
       ),
@@ -158,7 +156,8 @@ class AppTheme {
     snackBarTheme: SnackBarThemeData(
       backgroundColor: lightTextPrimary,
       contentTextStyle: GoogleFonts.inter(color: Colors.white),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape:
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       behavior: SnackBarBehavior.floating,
     ),
   );
@@ -172,7 +171,7 @@ class AppTheme {
       primary: primaryLight,
       secondary: accentColor,
       error: errorColor,
-      // ✅ Use surface/onSurface instead of deprecated background/onBackground
+      // ✅ surface/onSurface (no deprecated background/onBackground)
       surface: darkSurface,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
@@ -205,10 +204,9 @@ class AppTheme {
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        padding:
-        const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         textStyle:
         GoogleFonts.sora(fontSize: 15, fontWeight: FontWeight.w600),
       ),
@@ -217,10 +215,9 @@ class AppTheme {
       style: OutlinedButton.styleFrom(
         foregroundColor: primaryLight,
         side: const BorderSide(color: primaryLight, width: 1.5),
-        padding:
-        const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         textStyle:
         GoogleFonts.sora(fontSize: 15, fontWeight: FontWeight.w600),
       ),
@@ -272,7 +269,8 @@ class AppTheme {
     snackBarTheme: SnackBarThemeData(
       backgroundColor: darkCardBg,
       contentTextStyle: GoogleFonts.inter(color: darkTextPrimary),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape:
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       behavior: SnackBarBehavior.floating,
     ),
   );

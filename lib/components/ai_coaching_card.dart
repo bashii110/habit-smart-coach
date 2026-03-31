@@ -25,7 +25,6 @@ class _AICoachingCardState extends State<AICoachingCard>
   Map<String, String>? _quote;
   ConsistencyReport? _report;
   bool _loadingAI = false;
-  bool _showQuote = false; // toggle between AI insight and quote
 
   late AnimationController _shimmerController;
   late Animation<double> _shimmerAnim;
@@ -47,7 +46,24 @@ class _AICoachingCardState extends State<AICoachingCard>
   @override
   void didUpdateWidget(AICoachingCard old) {
     super.didUpdateWidget(old);
-    if (old.habits.length != widget.habits.length) {
+
+    final oldCompletedCount =
+        old.habits.where((h) => h.isCompletedToday).length;
+    final newCompletedCount =
+        widget.habits.where((h) => h.isCompletedToday).length;
+
+    final oldMaxStreak = old.habits.isEmpty
+        ? 0
+        : old.habits.map((h) => h.streakCount).reduce((a, b) => a > b ? a : b);
+    final newMaxStreak = widget.habits.isEmpty
+        ? 0
+        : widget.habits
+        .map((h) => h.streakCount)
+        .reduce((a, b) => a > b ? a : b);
+
+    if (old.habits.length != widget.habits.length ||
+        oldCompletedCount != newCompletedCount ||
+        oldMaxStreak != newMaxStreak) {
       _loadData();
     }
   }
@@ -97,14 +113,13 @@ class _AICoachingCardState extends State<AICoachingCard>
         // ── Consistency Nudge ─────────────────────────────────
         if (_report != null &&
             _report!.status != ConsistencyStatus.new_ &&
-            _report!.streaksAtRisk.isNotEmpty)
+            _report!.streaksAtRisk.isNotEmpty) ...[
           _buildStreakWarningCard(isDark),
+          const SizedBox(height: 12),
+        ],
 
         // ── Quote Card ────────────────────────────────────────
-        if (_quote != null) ...[
-          const SizedBox(height: 12),
-          _buildQuoteCard(isDark),
-        ],
+        if (_quote != null) _buildQuoteCard(isDark),
       ],
     );
   }
@@ -132,8 +147,8 @@ class _AICoachingCardState extends State<AICoachingCard>
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.white.withAlpha(40),
                     borderRadius: BorderRadius.circular(20),
@@ -141,8 +156,7 @@ class _AICoachingCardState extends State<AICoachingCard>
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('🧠',
-                          style: TextStyle(fontSize: 12)),
+                      const Text('🧠', style: TextStyle(fontSize: 12)),
                       const SizedBox(width: 4),
                       Text(
                         'AI Coach',
@@ -212,7 +226,6 @@ class _AICoachingCardState extends State<AICoachingCard>
   }
 
   Widget _buildStreakWarningCard(bool isDark) {
-    final topHabit = _report!.streaksAtRisk.first;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -271,10 +284,7 @@ class _AICoachingCardState extends State<AICoachingCard>
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '💬',
-            style: const TextStyle(fontSize: 20),
-          ),
+          const Text('💬', style: TextStyle(fontSize: 20)),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

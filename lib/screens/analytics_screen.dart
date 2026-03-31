@@ -64,6 +64,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
           onPressed: () => Navigator.pop(context),
         ),
       ),
+      // ✅ Bottom nav — Analytics tab is active, Home taps back
+      bottomNavigationBar: _buildBottomNav(context, isDark),
       body: Consumer<HabitProvider>(
         builder: (context, habitProv, _) {
           if (habitProv.analyticsLoading) {
@@ -76,8 +78,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
           }
 
           final habits = analytics['habits'] as List<HabitModel>;
-          final weeklyData =
-          analytics['weeklyData'] as Map<String, int>;
+          final weeklyData = analytics['weeklyData'] as Map<String, int>;
 
           return FadeTransition(
             opacity: _fadeAnim,
@@ -100,6 +101,49 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
     );
   }
 
+  // ── Bottom navigation ───────────────────────────────────────────────────────
+
+  Widget _buildBottomNav(BuildContext context, bool isDark) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? AppTheme.darkSurface : AppTheme.lightSurface,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(13),
+            blurRadius: 10,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _BottomNavItem(
+                icon: Icons.home_rounded,
+                label: 'Home',
+                isActive: false,
+                // Tap Home → go back to HomeScreen
+                onTap: () => Navigator.pop(context),
+              ),
+              _BottomNavItem(
+                icon: Icons.bar_chart_rounded,
+                label: 'Analytics',
+                isActive: true,
+                onTap: () {}, // already here
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Stats row ───────────────────────────────────────────────────────────────
+
   Widget _buildStatsRow(
       BuildContext context,
       Map<String, dynamic> analytics,
@@ -114,42 +158,31 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       children: [
         Expanded(
           child: _StatCard(
-            emoji: '🎯',
-            label: 'Total Habits',
-            value: '$total',
-            isDark: isDark,
-          ),
+              emoji: '🎯', label: 'Total Habits', value: '$total', isDark: isDark),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: _StatCard(
-            emoji: '✅',
-            label: 'Completions',
-            value: '$completions',
-            isDark: isDark,
-          ),
+              emoji: '✅', label: 'Completions', value: '$completions', isDark: isDark),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: _StatCard(
-            emoji: '🔥',
-            label: 'Best Streak',
-            value: '$longestStreak',
-            isDark: isDark,
-          ),
+              emoji: '🔥', label: 'Best Streak', value: '$longestStreak', isDark: isDark),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: _StatCard(
-            emoji: '📈',
-            label: 'Weekly Rate',
-            value: '${(rate * 100).toInt()}%',
-            isDark: isDark,
-          ),
+              emoji: '📈',
+              label: 'Weekly Rate',
+              value: '${(rate * 100).toInt()}%',
+              isDark: isDark),
         ),
       ],
     );
   }
+
+  // ── Weekly chart ────────────────────────────────────────────────────────────
 
   Widget _buildWeeklyChart(
       BuildContext context,
@@ -199,7 +232,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             barTouchData: BarTouchData(
               enabled: true,
               touchTooltipData: BarTouchTooltipData(
-                // ✅ Correct parameter for fl_chart 0.66.2
                 tooltipBgColor: isDark
                     ? AppTheme.darkCardBg
                     : AppTheme.primaryColor.withAlpha(230),
@@ -216,27 +248,21 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
               ),
             ),
             titlesData: FlTitlesData(
-              leftTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              rightTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              topTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
+              leftTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
               bottomTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
                   getTitlesWidget: (value, meta) {
-                    if (value.toInt() >= days.length) {
-                      return const SizedBox();
-                    }
+                    if (value.toInt() >= days.length) return const SizedBox();
                     return Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Text(
-                        AppDateUtils.formatDayOfWeek(
-                            days[value.toInt()]),
+                        AppDateUtils.formatDayOfWeek(days[value.toInt()]),
                         style: GoogleFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
@@ -268,16 +294,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
     );
   }
 
+  // ── Smart insights ──────────────────────────────────────────────────────────
+
   Widget _buildInsightsSection(
       BuildContext context,
       List<HabitModel> habits,
       bool isDark,
       ) {
-    final insightHabits = habits
-        .where((h) => h.smartTimeSuggestion != null)
-        .take(3)
-        .toList();
-
+    final insightHabits =
+    habits.where((h) => h.smartTimeSuggestion != null).take(3).toList();
     if (insightHabits.isEmpty) return const SizedBox.shrink();
 
     return _SectionCard(
@@ -297,10 +322,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
-                    child: Text(
-                      habit.iconEmoji ?? '⭐',
-                      style: const TextStyle(fontSize: 18),
-                    ),
+                    child: Text(habit.iconEmoji ?? '⭐',
+                        style: const TextStyle(fontSize: 18)),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -308,14 +331,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        habit.title,
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
+                      Text(habit.title,
+                          style: Theme.of(context).textTheme.titleSmall),
                       Text(
                         habit.smartTimeSuggestion!,
-                        style:
-                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppTheme.primaryColor,
                         ),
                       ),
@@ -329,6 +349,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       ),
     );
   }
+
+  // ── Habit performance breakdown ─────────────────────────────────────────────
 
   Widget _buildHabitBreakdown(
       BuildContext context,
@@ -350,16 +372,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
               children: [
                 Row(
                   children: [
-                    Text(
-                      habit.iconEmoji ?? '⭐',
-                      style: const TextStyle(fontSize: 16),
-                    ),
+                    Text(habit.iconEmoji ?? '⭐',
+                        style: const TextStyle(fontSize: 16)),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         habit.title,
-                        style:
-                        Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -400,6 +419,58 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
             ),
           );
         }).toList(),
+      ),
+    );
+  }
+}
+
+// ── Reusable widgets ──────────────────────────────────────────────────────────
+
+class _BottomNavItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isActive;
+  final VoidCallback onTap;
+
+  const _BottomNavItem({
+    required this.icon,
+    required this.label,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: isActive
+                ? AppTheme.primaryColor
+                : (isDark
+                ? AppTheme.darkTextSecondary
+                : AppTheme.lightTextSecondary),
+            size: 26,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: GoogleFonts.inter(
+              fontSize: 11,
+              fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+              color: isActive
+                  ? AppTheme.primaryColor
+                  : (isDark
+                  ? AppTheme.darkTextSecondary
+                  : AppTheme.lightTextSecondary),
+            ),
+          ),
+        ],
       ),
     );
   }

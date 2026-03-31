@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../components/ai_coaching_card.dart';
 import '../providers/auth_provider.dart';
 import '../providers/habit_provider.dart';
 import '../providers/theme_provider.dart';
@@ -320,29 +321,55 @@ class _HomeScreenState extends State<HomeScreen>
             ? habitProv.habits
             : habitProv.pendingTodayHabits;
 
+        // Only inject the AI card on the "All" tab
+        final bool showAICard = _selectedIndex == 0;
+        final int aiCardOffset = showAICard ? 1 : 0;
+
         if (habits.isEmpty) {
-          return EmptyStateWidget(
-            icon: _selectedIndex == 0 ? '🌱' : '✅',
-            title: _selectedIndex == 0
-                ? 'No habits yet'
-                : 'All done for today!',
-            subtitle: _selectedIndex == 0
-                ? 'Tap + to add your first habit'
-                : 'You\'ve completed all habits for today',
-            action: _selectedIndex == 0
-                ? TextButton(
-              onPressed: _navigateToAddHabit,
-              child: const Text('Add first habit'),
-            )
-                : null,
+          return Column(
+            children: [
+              if (showAICard)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                  child: AICoachingCard(habits: habitProv.habits),
+                ),
+              Expanded(
+                child: EmptyStateWidget(
+                  icon: _selectedIndex == 0 ? '🌱' : '✅',
+                  title: _selectedIndex == 0
+                      ? 'No habits yet'
+                      : 'All done for today!',
+                  subtitle: _selectedIndex == 0
+                      ? 'Tap + to add your first habit'
+                      : 'You\'ve completed all habits for today',
+                  action: _selectedIndex == 0
+                      ? TextButton(
+                    onPressed: _navigateToAddHabit,
+                    child: const Text('Add first habit'),
+                  )
+                      : null,
+                ),
+              ),
+            ],
           );
         }
 
         return ListView.builder(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 100),
-          itemCount: habits.length,
+          itemCount: habits.length + aiCardOffset,
           itemBuilder: (context, index) {
-            final habit = habits[index];
+            // AI card slot — only on "All" tab, only at index 0
+            if (showAICard && index == 0) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: AICoachingCard(habits: habitProv.habits),
+              );
+            }
+
+            // Correct habit index accounting for the AI card offset
+            final habitIndex = index - aiCardOffset;
+            final habit = habits[habitIndex];
+
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: HabitCard(
