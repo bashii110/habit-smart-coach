@@ -1,4 +1,4 @@
-![WhatsApp Image 2026-03-31 at 10 58 28 AM (1)](https://github.com/user-attachments/assets/ce167942-d892-4021-b267-fce9ae19ee5b)# ✨ Smart Habit Coach
+# ✨ Smart Habit Coach
 
 A beautifully designed, AI-powered habit tracking app built with Flutter — supporting Android, iOS, macOS, Windows, and Linux.
 
@@ -6,9 +6,13 @@ A beautifully designed, AI-powered habit tracking app built with Flutter — sup
 
 ## 📱 Screenshots
 
- ![WhatsApp Image 2026-03-31 at 10 58 28 AM](https://github.com/user-attachments/assets/52bf798c-7a18-4180-809b-f0220f2f0769)
-![WhatsApp Image 2026-03-31 at 10 58 28 AM (2)](https://github.com/user-attachments/assets/c1b118de-2b0d-4631-accf-9ff2953b28d5)
-![WhatsApp Image 2026-03-31 at 10 58 28 AM (1)](https://github.com/user-attachments/assets/c02ccc99-c1aa-4cf7-bacf-434b776f6496)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/52bf798c-7a18-4180-809b-f0220f2f0769" width="30%" />
+  &nbsp;
+  <img src="https://github.com/user-attachments/assets/c1b118de-2b0d-4631-accf-9ff2953b28d5" width="30%" />
+  &nbsp;
+  <img src="https://github.com/user-attachments/assets/c02ccc99-c1aa-4cf7-bacf-434b776f6496" width="30%" />
+</p>
 
 ---
 
@@ -76,7 +80,7 @@ lib/
 │   └── app_constants.dart           # App-wide constants
 │
 ├── firebase auth/
-│   ├── ai_service.dart              # Firebase Auth wrapper
+│   ├── auth_service.dart            # Firebase Auth wrapper
 │   ├── auth_service.dart            # Firebase Auth wrapper
 │   ├── habit_service.dart           # Firestore CRUD + analytics
 │   └── notification_service.dart    # Notification scheduling
