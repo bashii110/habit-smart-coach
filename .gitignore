@@ -43,3 +43,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Secrets — never commit these
+lib/firebase_options.dart
+android/app/google-services.json
+GoogleService-Info.plist
+.env
+*.env
