@@ -1,4 +1,4 @@
-# ✨ Smart Habit Coach
+![WhatsApp Image 2026-03-31 at 10 58 28 AM (1)](https://github.com/user-attachments/assets/ce167942-d892-4021-b267-fce9ae19ee5b)# ✨ Smart Habit Coach
 
 A beautifully designed, AI-powered habit tracking app built with Flutter — supporting Android, iOS, macOS, Windows, and Linux.
 
@@ -6,7 +6,8 @@ A beautifully designed, AI-powered habit tracking app built with Flutter — sup
 
 ## 📱 Screenshots
 
-> Add your app screenshots here.
+> A![WhatsApp Image 2026-03-31 at 10 58 28 AM (2)](https://github.com/user-attachments/assets/26303ed6-ca4e-4cbb-b292-f85107500fcb)
+![WhatsApp Image 2026-03-31 at 10 58 28 AM](https://github.com/user-attachments/assets/02ef317b-29fa-4f44-930d-964a05925083)
 
 ---
 
