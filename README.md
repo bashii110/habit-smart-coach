@@ -74,6 +74,7 @@ lib/
 │   └── app_constants.dart           # App-wide constants
 │
 ├── firebase auth/
+│   ├── ai_service.dart              # Firebase Auth wrapper
 │   ├── auth_service.dart            # Firebase Auth wrapper
 │   ├── habit_service.dart           # Firestore CRUD + analytics
 │   └── notification_service.dart    # Notification scheduling
