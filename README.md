@@ -6,8 +6,9 @@ A beautifully designed, AI-powered habit tracking app built with Flutter — sup
 
 ## 📱 Screenshots
 
-> A![WhatsApp Image 2026-03-31 at 10 58 28 AM (2)](https://github.com/user-attachments/assets/26303ed6-ca4e-4cbb-b292-f85107500fcb)
-![WhatsApp Image 2026-03-31 at 10 58 28 AM](https://github.com/user-attachments/assets/02ef317b-29fa-4f44-930d-964a05925083)
+ ![WhatsApp Image 2026-03-31 at 10 58 28 AM](https://github.com/user-attachments/assets/52bf798c-7a18-4180-809b-f0220f2f0769)
+![WhatsApp Image 2026-03-31 at 10 58 28 AM (2)](https://github.com/user-attachments/assets/c1b118de-2b0d-4631-accf-9ff2953b28d5)
+![WhatsApp Image 2026-03-31 at 10 58 28 AM (1)](https://github.com/user-attachments/assets/c02ccc99-c1aa-4cf7-bacf-434b776f6496)
 
 ---
 
