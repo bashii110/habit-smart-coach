@@ -1,6 +1,28 @@
+<div align="center">
+
+<img src="https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white"/>
+<img src="https://img.shields.io/badge/Dart-3.x-0175C2?style=for-the-badge&logo=dart&logoColor=white"/>
+<img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black"/>
+<img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20macOS%20%7C%20Windows-lightgrey?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Release-v1.0.0-6C63FF?style=for-the-badge"/>
+
+<br/><br/>
+
 # ✨ Smart Habit Coach
 
-A beautifully designed, AI-powered habit tracking app built with Flutter — supporting Android, iOS, macOS, Windows, and Linux.
+**An AI-powered habit tracking app — beautifully designed, cross-platform, and built with Flutter.**  
+Track your habits, visualize your progress, and let smart insights guide you to consistency.
+
+<br/>
+
+[📥 Download APK](https://github.com/bashii110/habit-smart-coach/releases/download/v1.0.0/app-release.apk) &nbsp;·&nbsp;
+[💼 LinkedIn](https://www.linkedin.com/in/bashir-ahmed110) &nbsp;·&nbsp;
+[🐙 GitHub](https://github.com/bashii110) &nbsp;·&nbsp;
+[🌐 Portfolio](https://bashii110.github.io/bashir_ahmed_portfolio/) &nbsp;·&nbsp;
+[📬 Contact](mailto:buxhiisd@gmail.com)
+
+</div>
 
 ---
 
@@ -18,15 +40,34 @@ A beautifully designed, AI-powered habit tracking app built with Flutter — sup
 
 ## 🚀 Features
 
-- **Habit Management** — Create, edit, and delete daily or weekly habits with custom emoji icons
-- **Streak Tracking** — Automatic streak calculation with Bronze 🥉, Silver 🥈, and Gold 🥇 milestones
-- **Smart Insights** — AI-powered suggestions based on your historical completion patterns (e.g., "You usually complete this at 8:00 PM")
-- **Analytics Dashboard** — Weekly bar charts, completion rates, and per-habit performance breakdowns
-- **Local Notifications** — Scheduled reminders via `flutter_local_notifications` with exact alarm support on Android
-- **Dark / Light Theme** — Fully themed UI with persistent theme preference
-- **Firebase Backend** — Real-time Firestore sync, Firebase Authentication (email/password), and password reset
-- **Offline-Resilient** — Graceful fallback when Firestore is unreachable; auth always succeeds from Firebase Auth state
-- **Animated UI** — Smooth fade, slide, and scale transitions throughout
+| Feature | Description |
+|---|---|
+| 🗂️ **Habit Management** | Create, edit, and delete daily or weekly habits with custom emoji icons |
+| 🔥 **Streak Tracking** | Auto streak calculation with 🥉 Bronze, 🥈 Silver, and 🥇 Gold milestones |
+| 🤖 **Smart Insights** | AI-powered suggestions based on your historical completion patterns |
+| 📊 **Analytics Dashboard** | Weekly bar charts, completion rates, and per-habit performance breakdowns |
+| 🔔 **Local Notifications** | Scheduled reminders with exact alarm support, persistent across reboots |
+| 🌙 **Dark / Light Theme** | Fully themed Material 3 UI with persistent theme preference |
+| ☁️ **Firebase Backend** | Real-time Firestore sync + Firebase Authentication (email/password + password reset) |
+| 📶 **Offline-Resilient** | Graceful fallback when Firestore is unreachable |
+| 🎞️ **Animated UI** | Smooth fade, slide, and scale transitions throughout |
+
+---
+
+## 📥 Download & Install
+
+> **Requires Android 6.0+ (minSdk 23)**
+
+<div align="center">
+
+[![Download APK](https://img.shields.io/badge/⬇️%20Download%20APK-v1.0.0-6C63FF?style=for-the-badge)](https://github.com/bashii110/habit-smart-coach/releases/download/v1.0.0/app-release.apk)
+
+</div>
+
+1. Tap the button above to download the `.apk` file
+2. On your Android device, go to **Settings → Install unknown apps** and allow your browser
+3. Open the downloaded file and tap **Install**
+4. Launch **Smart Habit Coach** and sign up 🎉
 
 ---
 
@@ -44,6 +85,22 @@ A beautifully designed, AI-powered habit tracking app built with Flutter — sup
 | Animations | Lottie |
 | Storage | shared_preferences |
 | Utilities | intl, uuid, timezone |
+
+---
+
+## 🎨 Design System
+
+The app uses **Material 3** with two custom themes defined in `lib/theme/app_theme.dart`.
+
+| Token | Light | Dark |
+|---|---|---|
+| Primary | `#6C63FF` | `#9C94FF` |
+| Accent | `#00D9A3` | `#00D9A3` |
+| Background | `#F8F7FF` | `#0F0E1A` |
+| Card | `#FFFFFF` | `#231F3A` |
+| Error | `#FF5A7E` | `#FF5A7E` |
+
+Fonts: **Sora** (headings) + **Inter** (body)
 
 ---
 
@@ -79,19 +136,15 @@ lib/
 │   ├── empty_state_widget.dart      # Empty state placeholder
 │   └── app_constants.dart           # App-wide constants
 │
-├── firebase auth/
-│   ├── auth_service.dart            # Firebase Auth wrapper
+├── services/
 │   ├── auth_service.dart            # Firebase Auth wrapper
 │   ├── habit_service.dart           # Firestore CRUD + analytics
 │   └── notification_service.dart    # Notification scheduling
 │
-├── providers/
-│   └── theme_provider.dart
-│
 ├── theme/
 │   └── app_theme.dart               # Full Material 3 light + dark theme
 │
-└── utility helpers/
+└── utils/
     └── data_utils.dart              # Date math, streak calc, greeting, etc.
 
 test/
@@ -102,20 +155,20 @@ test/
 
 ---
 
-## ⚙️ Getting Started
+## ⚙️ Getting Started (Build from Source)
 
 ### Prerequisites
 
 - [Flutter SDK](https://flutter.dev/docs/get-started/install) ≥ 3.27.0
 - Dart SDK ≥ 3.0.0
 - A Firebase project ([console.firebase.google.com](https://console.firebase.google.com))
-- Android `minSdk` 23+ (required by Firebase Auth v5)
+- Android `minSdk` 23+
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/smart-habit-coach.git
-cd smart-habit-coach
+git clone https://github.com/bashii110/habit-smart-coach.git
+cd habit-smart-coach
 ```
 
 ### 2. Install dependencies
@@ -126,16 +179,12 @@ flutter pub get
 
 ### 3. Configure Firebase
 
-This project uses FlutterFire. To connect your own Firebase project:
-
 ```bash
 dart pub global activate flutterfire_cli
 flutterfire configure
 ```
 
-This will generate `lib/firebase_options.dart` and the platform config files (`google-services.json`, `GoogleService-Info.plist`).
-
-> **Note:** The existing `lib/firebase_options.dart` and `android/app/google-services.json` are pre-configured for the `habit-smartcoach` project. Replace them with your own for production use.
+This generates `lib/firebase_options.dart` and platform config files.
 
 ### 4. Deploy Firestore Security Rules
 
@@ -147,35 +196,28 @@ firebase deploy --only firestore:indexes
 ### 5. Run the app
 
 ```bash
-# Android / iOS
-flutter run
-
-# Specific platform
-flutter run -d android
-flutter run -d ios
-flutter run -d macos
-flutter run -d windows
+flutter run              # Android / iOS
+flutter run -d macos     # macOS
+flutter run -d windows   # Windows
 ```
 
 ---
 
 ## 🔒 Firestore Security Rules
 
-Habits and user documents are fully protected — only the authenticated owner can read or write their own data. Habit creation and updates are validated server-side:
+Only the authenticated owner can read or write their own data. Server-side validation enforces:
 
 - `title`: 2–50 characters (required)
-- `frequency`: must be `"daily"` or `"weekly"`
+- `frequency`: `"daily"` or `"weekly"` only
 - `description`: max 200 characters (optional)
-
-See [`firestore.rules`](firestore.rules) for the full ruleset.
 
 ---
 
 ## 🔔 Notifications
 
-Notification permissions are requested on first launch. Habit reminders are scheduled using exact alarms and persist across reboots via the `BOOT_COMPLETED` receiver.
+Reminders are scheduled using exact alarms and persist across reboots via `BOOT_COMPLETED`.
 
-**Required Android permissions (already declared in `AndroidManifest.xml`):**
+**Required Android permissions (declared in `AndroidManifest.xml`):**
 
 ```xml
 <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
@@ -189,57 +231,23 @@ Notification permissions are requested on first launch. Habit reminders are sche
 ## 🧪 Running Tests
 
 ```bash
-# All tests
-flutter test
-
-# With coverage
-flutter test --coverage
-
-# Analyze code
-flutter analyze
+flutter test              # All tests
+flutter test --coverage   # With coverage
+flutter analyze           # Static analysis
 ```
 
-The test suite covers:
-
-- `HabitModel` — `isCompletedToday`, `smartTimeSuggestion`, `streakLabel`, `completionRateThisWeek`, `copyWith`, serialization
-- `AppDateUtils` — `isSameDay`, `isToday`, `isYesterday`, `calculateStreak`, `calculateCompletionRate`, `timeAgo`, `getLast7Days`
-
----
-
-## 🎨 Theme & Design System
-
-The app uses **Material 3** with two custom themes defined in `lib/theme/app_theme.dart`.
-
-| Token | Light | Dark |
-|---|---|---|
-| Primary | `#6C63FF` | `#9C94FF` |
-| Accent | `#00D9A3` | `#00D9A3` |
-| Background | `#F8F7FF` | `#0F0E1A` |
-| Card | `#FFFFFF` | `#231F3A` |
-| Error | `#FF5A7E` | `#FF5A7E` |
-| Success | `#00D9A3` | `#00D9A3` |
-
-Fonts: **Sora** (headings) + **Inter** (body)
+Test coverage includes `HabitModel`, `AppDateUtils`, and widget smoke tests.
 
 ---
 
 ## 📦 Build
 
 ```bash
-# Android APK
-flutter build apk --release
-
-# Android App Bundle (Play Store)
-flutter build appbundle --release
-
-# iOS (requires macOS + Xcode)
-flutter build ios --release
-
-# macOS
-flutter build macos --release
-
-# Windows
-flutter build windows --release
+flutter build apk --release          # Android APK
+flutter build appbundle --release    # Android App Bundle (Play Store)
+flutter build ios --release          # iOS (requires macOS + Xcode)
+flutter build macos --release        # macOS
+flutter build windows --release      # Windows
 ```
 
 ---
@@ -267,17 +275,35 @@ Please run `flutter analyze` and `flutter test` before submitting.
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
----
-
 ## 👤 Author
 
-**buxhiisd**  
-Bundle ID: `com.buxhiisd.smartHabitCoach`
+<div align="center">
+
+**Bashir Ahmed** — Flutter Developer  
+Software Engineering Student @ Quaid e Awam University, Nawabshah (2026)
+
+<br/>
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-bashir--ahmed110-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/bashir-ahmed110)
+[![GitHub](https://img.shields.io/badge/GitHub-bashii110-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/bashii110)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-6C63FF?style=for-the-badge&logo=firefox&logoColor=white)](https://bashii110.github.io/bashir_ahmed_portfolio/)
+[![Email](https://img.shields.io/badge/Email-buxhiisd@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:buxhiisd@gmail.com)
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-Chat-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/923063440645)
+
+</div>
 
 ---
 
-> Built with ❤️ using Flutter & Firebase
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+
+Built with ❤️ and Flutter by **Bashir Ahmed**
+
+⭐ Star this repo if you found it helpful!
+
+</div>
