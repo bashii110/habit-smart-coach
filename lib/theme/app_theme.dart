@@ -78,12 +78,12 @@ class AppTheme {
       ),
       iconTheme: const IconThemeData(color: lightTextPrimary),
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: lightCardBg,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: primaryColor.withAlpha(20), width: 1),
+        side:  BorderSide(color: primaryColor.withAlpha(20), width: 1),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -191,7 +191,7 @@ class AppTheme {
       ),
       iconTheme: const IconThemeData(color: darkTextPrimary),
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: darkCardBg,
       elevation: 0,
       shape: RoundedRectangleBorder(
