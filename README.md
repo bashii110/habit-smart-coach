@@ -29,11 +29,11 @@ Track your habits, visualize your progress, and let smart insights guide you to 
 ## 📱 Screenshots
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/52bf798c-7a18-4180-809b-f0220f2f0769" width="30%" />
+  <img src="https://github.com/user-attachments/assets/52bf798c-7a18-4180-809b-f0220f2f0769" width="20%" />
   &nbsp;
-  <img src="https://github.com/user-attachments/assets/c1b118de-2b0d-4631-accf-9ff2953b28d5" width="30%" />
+  <img src="https://github.com/user-attachments/assets/c1b118de-2b0d-4631-accf-9ff2953b28d5" width="20%" />
   &nbsp;
-  <img src="https://github.com/user-attachments/assets/c02ccc99-c1aa-4cf7-bacf-434b776f6496" width="30%" />
+  <img src="https://github.com/user-attachments/assets/c02ccc99-c1aa-4cf7-bacf-434b776f6496" width="20%" />
 </p>
 
 ---
